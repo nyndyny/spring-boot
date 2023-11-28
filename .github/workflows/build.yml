@@ -36,7 +36,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
-          PROJECT_DIR=$(find . -name "pom.xml" -print -quit -exec dirname {} \;)
+          PROJECT_DIR=$(find . -name "pom.xml" -exec dirname {} \; | head -n 1)
           cd $PROJECT_DIR
       
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JavaSpringVulnerabilities -Dsonar.projectName='JavaSpringVulnerabilities' -Dmaven.compiler.source=17 -Dmaven.compiler.target=17
