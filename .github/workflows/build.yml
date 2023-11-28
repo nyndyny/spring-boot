@@ -36,6 +36,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
-          cd spring-boot-project/spring-boot-tools/spring-boot-maven-plugin/src/intTest/projects/run  # Replace with the actual path to your Maven project
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JavaSpringVulnerabilities -Dsonar.projectName='JavaSpringVulnerabilities'
+          PROJECT_DIR=$(find . -name "pom.xml" -print -quit -exec dirname {} \;)
+          cd $PROJECT_DIR
+      
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JavaSpringVulnerabilities -Dsonar.projectName='JavaSpringVulnerabilities' -Dmaven.compiler.source=17 -Dmaven.compiler.target=17
 
