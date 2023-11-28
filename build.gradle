@@ -1,7 +1,8 @@
 plugins {
-	id "base"
-	id "org.jetbrains.kotlin.jvm" apply false // https://youtrack.jetbrains.com/issue/KT-30276
-	id "io.spring.nohttp" version "0.0.11"
+    id "base"
+    id "org.jetbrains.kotlin.jvm" apply false // https://youtrack.jetbrains.com/issue/KT-30276
+    id "io.spring.nohttp" version "0.0.11"
+    id "org.sonarqube" version "4.4.1.3373"
 }
 
 description = "Spring Boot Build"
@@ -9,39 +10,46 @@ description = "Spring Boot Build"
 defaultTasks 'build'
 
 nohttp {
-	allowlistFile = project.file("src/nohttp/allowlist.lines")
-	source.exclude "**/bin/**"
-	source.exclude "**/build/**"
-	source.exclude "**/out/**"
-	source.exclude "**/target/**"
-	source.exclude "**/.settings/**"
-	source.exclude "**/.classpath"
-	source.exclude "**/.project"
-	source.exclude "spring-boot-project/spring-boot-tools/spring-boot-buildpack-platform/src/test/resources/org/springframework/boot/buildpack/platform/docker/export.tar"
+    allowlistFile = project.file("src/nohttp/allowlist.lines")
+    source.exclude "**/bin/**"
+    source.exclude "**/build/**"
+    source.exclude "**/out/**"
+    source.exclude "**/target/**"
+    source.exclude "**/.settings/**"
+    source.exclude "**/.classpath"
+    source.exclude "**/.project"
+    source.exclude "spring-boot-project/spring-boot-tools/spring-boot-buildpack-platform/src/test/resources/org/springframework/boot/buildpack/platform/docker/export.tar"
 }
 
 check {
-	dependsOn checkstyleNohttp
+    dependsOn checkstyleNohttp
 }
 
 allprojects {
-	group "org.springframework.boot"
+    group "org.springframework.boot"
 
-	repositories {
-		mavenCentral()
-		if (version.contains('-')) {
-			maven { url "https://repo.spring.io/milestone" }
-		}
-		if (version.endsWith('-SNAPSHOT')) {
-			maven { url "https://repo.spring.io/snapshot" }
-		}
-	}
+    repositories {
+        mavenCentral()
+        if (version.contains('-')) {
+            maven { url "https://repo.spring.io/milestone" }
+        }
+        if (version.endsWith('-SNAPSHOT')) {
+            maven { url "https://repo.spring.io/snapshot" }
+        }
+    }
 
-	configurations.all {
-		resolutionStrategy.cacheChangingModulesFor 0, "minutes"
-	}
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, "minutes"
+    }
 }
 
 tasks.named("checkstyleNohttp").configure {
-	maxHeapSize = "1536m"
+    maxHeapSize = "1536m"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "JavaSpringVulnerabilities"
+        property "sonar.projectName", "JavaSpringVulnerabilities"
+    }
 }
